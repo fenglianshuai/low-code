@@ -1,11 +1,14 @@
 <template>
-  <Editor :data="state"></Editor>
+  <Editor v-model="state"></Editor>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import data from './data.json';
-import Editor from './views/editor'
+import Editor from './views/editor';
+import { registerConfig as config } from './utils/editor-config';
+
+provide('config', config);
 const state = ref(data);
 
 </script>

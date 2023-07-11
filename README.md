@@ -33,3 +33,8 @@ npm run build
 ```sh
 npm run lint
 ```
+
+// 描述页面如何渲染 data.json
+
+1. 构造假数据，能实现根据位置渲染内容
+2. 配置组件对应的映射关系
