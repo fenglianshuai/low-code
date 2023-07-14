@@ -6,7 +6,7 @@
 import { provide, ref } from 'vue'
 import data from './data.json';
 import Editor from './views/editor';
-import { registerConfig as config } from './utils/editor-config';
+import { registerConfig as config } from './components/editor-config';
 
 provide('config', config);
 const state = ref(data);

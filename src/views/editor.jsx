@@ -1,10 +1,11 @@
 import { computed, defineComponent, inject, ref } from 'vue'
 import './editor.scss'
-import EditorBlocks from './editor-blocks'
+import EditorBlocks from '../components/editor-blocks'
 import deepcopy from 'deepcopy'
 import { useMenuDragger } from '../utils/useMenuDragger.js'
 import { useFocus } from '../utils/useFocus'
 import { useBlockDragger } from '../utils/useBlockDragger'
+import { useCommand } from '../utils/useCommand'
 export default defineComponent({
   props: {
     modelValue: { type: Object }
@@ -44,6 +45,22 @@ export default defineComponent({
     )
     // 2-1.内容区拖拽 - 制作辅助线
     const { mousedown, markLine } = useBlockDragger(focusData, lastSelectBlock, data)
+    // 3. 工具区撤销与重做
+    const { commands } = useCommand(data)
+    const buttons = [
+      {
+        label: '撤销',
+        keyboard: 'ctrl+z',
+        icon: 'icon-chexiaozuo',
+        handler: () => commands.undo()
+      },
+      {
+        label: '重做',
+        keyboard: 'ctrl+y',
+        icon: 'icon-chexiaoyou',
+        handler: () => commands.redo()
+      }
+    ]
 
     return () => (
       <div class="editor">
@@ -58,7 +75,13 @@ export default defineComponent({
           ))}
         </div>
         {/* 头部工具区 */}
-        <div class="editor-top">工具区</div>
+        <div class="editor-top">
+          {buttons.map((btn) => {
+            return (
+              <i class={btn.icon} title={`${btn.label}${btn.keyboard}`} onClick={btn.handler}></i>
+            )
+          })}
+        </div>
         {/* 右侧属性区 */}
         <div class="editor-right">属性区</div>
         {/* 中间内容区 */}

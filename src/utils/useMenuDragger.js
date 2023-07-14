@@ -1,3 +1,9 @@
+import {
+  events
+} from './events'
+import {
+  nextTick
+} from 'vue'
 export function useMenuDragger(data, containerRef) {
   let currentComponent = null
   const dragstart = (e, component) => {
@@ -11,6 +17,7 @@ export function useMenuDragger(data, containerRef) {
     containerRef.value.addEventListener('dragleave', dragleave)
     containerRef.value.addEventListener('drop', drop)
     currentComponent = component
+    events.emit('start') // 发布一个start
   }
 
   const dragenter = (e) => {
@@ -42,6 +49,9 @@ export function useMenuDragger(data, containerRef) {
     containerRef.value.removeEventListener('dragover', dragover)
     containerRef.value.removeEventListener('dragleave', dragleave)
     containerRef.value.removeEventListener('drop', drop)
+    nextTick(() => {
+      events.emit('end') // 发布end
+    })
   }
   return {
     dragstart

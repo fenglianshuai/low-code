@@ -12,6 +12,7 @@
   "dependencies": {
     "deepcopy": "^2.1.0",
     "element-plus": "^2.3.7",
+    "mitt": "^3.0.1",
     "pinia": "^2.1.3",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2"

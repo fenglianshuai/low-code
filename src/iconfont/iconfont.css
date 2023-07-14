@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'iconfont'; /* Project id 720566 */
+  src: url('iconfont.woff2?t=1689305905397') format('woff2'),
+    url('iconfont.woff?t=1689305905397') format('woff'),
+    url('iconfont.ttf?t=1689305905397') format('truetype');
+}
+
+[class*='icon-'] {
+  font-family: 'iconfont' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-chexiaozuo:before {
+  content: '\e604';
+}
+
+.icon-chexiaoyou:before {
+  content: '\e605';
+}
