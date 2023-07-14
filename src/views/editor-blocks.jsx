@@ -21,6 +21,8 @@ export default defineComponent({
         props.block.left = props.block.left - offsetWidth / 2
         props.block.alignCenter = false
       }
+      props.block.width = offsetWidth
+      props.block.height = offsetHeight
     })
 
     return () => {

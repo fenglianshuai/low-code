@@ -1,12 +1,11 @@
 // 列表区显示所有物料
 // key对应组件的映射关系
-
 import { ElButton, ElInput } from 'element-plus'
 
 function createEditorConfig() {
   // 组件列表
   const componentList = []
-  // 映射关系
+  // 组件映射关系
   const componentMap = {}
 
   return {
@@ -21,7 +20,7 @@ function createEditorConfig() {
 }
 
 export let registerConfig = createEditorConfig()
-
+// 注册组件
 registerConfig.register({
   label: '文本',
   preview: () => '预览文本',
