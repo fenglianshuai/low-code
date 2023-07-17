@@ -18,11 +18,11 @@ export function useCommand(data) {
   // 注册方法
   const registry = (command) => {
     state.commandArray.push(command)
-    state.commands[command.name] = () => { // 命令名字对应执行函数
+    state.commands[command.name] = (...args) => { // 命令名字对应执行函数
       const {
         redo,
         undo
-      } = command.execute()
+      } = command.execute(...args)
       redo();
       // 判断命令是否需要放到队列中，不需要放到队列中直接跳过
       if (command.pushQueue) {
@@ -119,6 +119,25 @@ export function useCommand(data) {
       }
     }
   });
+  // 更新整个容器内容 带有历史记录
+  registry({
+    name: 'updateContainer',
+    pushQueue: true,
+    execute(newValue) {
+      let state = {
+        before: data.value,
+        after: newValue
+      }
+      return {
+        redo() { // 前进
+          data.value = state.after
+        },
+        undo() { // 后退
+          data.value = state.before
+        }
+      }
+    }
+  })
 
   // 注册键盘事件
   const keybarodEvent = (() => {

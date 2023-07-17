@@ -6,6 +6,7 @@ import { useMenuDragger } from '../utils/useMenuDragger.js'
 import { useFocus } from '../utils/useFocus'
 import { useBlockDragger } from '../utils/useBlockDragger'
 import { useCommand } from '../utils/useCommand'
+import { $dialog } from '../components/Dialog'
 export default defineComponent({
   props: {
     modelValue: { type: Object }
@@ -59,6 +60,35 @@ export default defineComponent({
         keyboard: 'ctrl+y',
         icon: 'icon-chexiaoyou',
         handler: () => commands.redo()
+      },
+      {
+        label: '导入',
+        icon: 'icon-daoru',
+        handler: () => {
+          $dialog({
+            title: '导入',
+            content: '',
+            footer: true,
+            onConfirm(json) {
+              console.log(json)
+              commands.updateContainer(JSON.parse(json))
+            }
+          })
+        }
+      },
+      {
+        label: '导出',
+        icon: 'icon-daochu',
+        handler: () => {
+          $dialog({
+            title: '导出',
+            content: JSON.stringify(data.value, null, 4),
+            footer: true,
+            onConfirm(json) {
+              console.log(json)
+            }
+          })
+        }
       }
     ]
 
@@ -78,7 +108,11 @@ export default defineComponent({
         <div class="editor-top">
           {buttons.map((btn) => {
             return (
-              <i class={btn.icon} title={`${btn.label}${btn.keyboard}`} onClick={btn.handler}></i>
+              <i
+                class={btn.icon}
+                title={`${btn.label}${btn.keyboard || ''}`}
+                onClick={btn.handler}
+              ></i>
             )
           })}
         </div>
