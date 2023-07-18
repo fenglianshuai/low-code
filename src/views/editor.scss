@@ -74,6 +74,7 @@
     [class*='icon-'] {
       font-size: 24px;
       cursor: pointer;
+      margin: 0 10px;
     }
   }
 
@@ -113,6 +114,12 @@
         border: 2px dashed red;
       }
     }
+
+    &-preview {
+      &::after {
+        display: none;
+      }
+    }
   }
 }
 
@@ -130,4 +137,41 @@
   left: 0;
   right: 0;
   border-top: 1px dashed red;
+}
+
+// 鼠标右键弹窗
+.dropdown {
+  display: none;
+  position: absolute;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+  margin: 5px 0;
+  z-index: 1000000;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 20%;
+    border-width: 6px;
+    border-top-width: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-bottom-color: #dedede;
+  }
+}
+
+.dropdown-isShow {
+  display: block;
+}
+
+.dropdown-item {
+  line-height: 30px;
+  width: 100px;
+  border-bottom: 1px solid #fff;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
 }

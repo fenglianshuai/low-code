@@ -2,12 +2,13 @@ import {
   computed,
   ref
 } from 'vue';
-export function useFocus(data, callback) {
+export function useFocus(data, previewRef, callback) {
   const selectIndex = ref(-1)
   // 最后选中的组件
   const lastSelectBlock = computed(() => data.value.blocks[selectIndex.value])
 
   const blockMousedown = (e, block, index) => {
+    if (previewRef.value) return
     e.preventDefault()
     e.stopPropagation()
     // block中定义一个focus的属性用于标识该元素是否被选中
@@ -44,12 +45,14 @@ export function useFocus(data, callback) {
   }
 
   const containerMousedown = () => {
+    if (previewRef.value) return
     clearBlockFocus()
   }
 
   return {
     containerMousedown,
     blockMousedown,
+    clearBlockFocus,
     focusData,
     lastSelectBlock
   }

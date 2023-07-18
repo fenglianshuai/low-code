@@ -6,6 +6,55 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "162767",
+      "name": "查看2",
+      "font_class": "chakan2",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "35348753",
+      "name": "替换潜客包",
+      "font_class": "tihuanqiankebao",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "848622",
+      "name": "bianji",
+      "font_class": "bianji",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "35102478",
+      "name": "预览04",
+      "font_class": "yulan04",
+      "unicode": "ea33",
+      "unicode_decimal": 59955
+    },
+    {
+      "icon_id": "6061533",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "ec7b",
+      "unicode_decimal": 60539
+    },
+    {
+      "icon_id": "3255777",
+      "name": "置顶",
+      "font_class": "control-top",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "3255778",
+      "name": "置底",
+      "font_class": "control-bottom",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
       "icon_id": "6244963",
       "name": "导入",
       "font_class": "daoru",

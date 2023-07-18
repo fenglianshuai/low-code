@@ -6,7 +6,7 @@ import {
   onUnmounted
 } from 'vue'
 
-export function useCommand(data) {
+export function useCommand(data, focusData) {
   const state = { // 前进后退需要的指针
     current: -1, // 前进后退的索引值
     queue: [], // 存放所有操作的命令
@@ -42,19 +42,18 @@ export function useCommand(data) {
           undo
         })
         state.current = current + 1
-        console.log(queue);
       }
     }
   }
 
-  // 注册需要的命令
+  /*******************************************************注册需要的命令*******************************************************************/
+  // 重做
   registry({
     name: 'redo',
     keyboard: 'ctrl+y',
     execute() {
       return {
         redo() {
-          console.log('重做')
           const item = state.queue[state.current + 1]
           if (item) {
             item.redo && item.redo();
@@ -64,14 +63,13 @@ export function useCommand(data) {
       }
     }
   })
-
+  // 撤销
   registry({
     name: 'undo',
     keyboard: 'ctrl+z',
     execute() {
       return {
         redo() {
-          console.log('撤销')
           if (state.current === -1) return; // 没有可撤销内容
           const item = state.queue[state.current]
           if (item) {
@@ -82,7 +80,7 @@ export function useCommand(data) {
       }
     }
   })
-
+  // 拖拽
   registry({ // 如果希望将操作放到队列中可以增加一个属性 标识等会操作要放到队列中
     name: 'drag',
     pushQueue: true,
@@ -138,12 +136,149 @@ export function useCommand(data) {
       }
     }
   })
+  // 更新单个block
+  registry({
+    name: 'updateBlock',
+    pushQueue: true,
+    execute(newBlock, oldBlock) {
+      let state = {
+        before: data.value.blocks,
+        after: (() => {
+          let blocks = [...data.value.blocks]
+          const index = data.value.blocks.indexOf(oldBlock)
+          if (index > -1) {
+            blocks.splice(index, 1, newBlock)
+          }
+          return blocks
+        })()
+      }
+      return {
+        redo() { // 前进
+          data.value = {
+            ...data.value,
+            blocks: state.after
+          }
+        },
+        undo() { // 后退
+          data.value = {
+            ...data.value,
+            blocks: state.before
+          }
+        }
+      }
+    }
+  })
+
+  // 置顶
+  registry({
+    name: 'placeTop',
+    keyboard: 'ctrl++',
+    pushQueue: true,
+    execute() {
+      const before = deepcopy(data.value.blocks);
+      const after = (() => { // 在所有的blocks中找到zIndex最大的
+        const {
+          focus,
+          unfocused
+        } = focusData.value
+        const maxZIndex = unfocused.reduce((cur, block) => {
+          return Math.max(cur, block.zIndex)
+        }, -Infinity)
+        focus.forEach(block => block.zIndex = maxZIndex + 1)
+        return data.value.blocks
+      })()
+      return {
+        redo() { // 前进
+          data.value = {
+            ...data.value,
+            blocks: after
+          }
+        },
+        undo() { // 后退
+          data.value = {
+            ...data.value,
+            blocks: before
+          }
+        }
+      }
+    }
+  })
+  // 置底
+  registry({
+    name: 'placeBottom',
+    keyboard: 'ctrl+-',
+    pushQueue: true,
+    execute() {
+      const before = deepcopy(data.value.blocks);
+      const after = (() => { // 在所有的blocks中找到zIndex最大的
+        const {
+          focus,
+          unfocused
+        } = focusData.value
+        let minZIndex = unfocused.reduce((cur, block) => {
+          return Math.min(cur, block.zIndex)
+        }, Infinity) - 1
+        // 如果是负值则让没选中的组件向上自己变成0
+        if (minZIndex < 0) {
+          const dur = Math.abs(minZIndex)
+          minZIndex = 0
+          unfocused.forEach(block => block.zIndex += dur)
+        }
+        focus.forEach(block => block.zIndex = minZIndex) // 控制选中项的值
+        return data.value.blocks
+      })()
+      console.log(after);
+      return {
+        redo() { // 前进
+          data.value = {
+            ...data.value,
+            blocks: after
+          }
+        },
+        undo() { // 后退
+          data.value = {
+            ...data.value,
+            blocks: before
+          }
+        }
+      }
+    }
+  })
+
+  // 删除
+  registry({
+    name: 'delete',
+    keyboard: 'delete',
+    pushQueue: true,
+    execute() {
+      const state = {
+        before: deepcopy(data.value.blocks),
+        after: focusData.value.unfocused // 选中的都删除了
+      }
+      return {
+        redo() { // 前进
+          data.value = {
+            ...data.value,
+            blocks: state.after
+          }
+        },
+        undo() { // 后退
+          data.value = {
+            ...data.value,
+            blocks: state.before
+          }
+        }
+      }
+    }
+  })
 
   // 注册键盘事件
   const keybarodEvent = (() => {
     const keyCodes = {
       89: 'y',
       90: 'z',
+      107: '+',
+      109: '-',
     }
     const keydown = (e) => {
       const {
@@ -154,15 +289,19 @@ export function useCommand(data) {
       if (ctrlKey) keyString.push('ctrl')
       keyString.push(keyCodes[keyCode])
       keyString = keyString.join('+')
-
       state.commandArray.forEach(({
         keyboard,
         name
       }) => {
         if (!keyboard) return
         if (keyboard === keyString) {
-          state.commands[name]()
           e.preventDefault()
+          state.commands[name]()
+        }
+        // 删除
+        if (!ctrlKey && keyCode === 46) {
+          e.preventDefault()
+          state.commands[name]()
         }
       })
     }

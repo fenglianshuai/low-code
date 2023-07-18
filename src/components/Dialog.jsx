@@ -56,7 +56,7 @@ export function $dialog(option) {
     let el = document.createElement('div')
     // 创建虚拟节点 将组件渲染成虚拟节点
     vm = createVNode(DialogComponent, { option })
-    // 将虚拟节点转换成真实节点 将el放到页面中
+    // 将虚拟节点转换成真实节点 将el放到页面中 (,,)执行单个或多个表达式并返回最后一个表达式的值
     document.body.appendChild((render(vm, el), el))
   }
   let { showDialog } = vm.component.exposed
