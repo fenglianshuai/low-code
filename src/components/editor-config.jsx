@@ -29,10 +29,25 @@ const createTableProp = (label, table) => ({ type: 'table', label, table })
 registerConfig.register({
   label: '文本',
   preview: () => '预览文本',
-  render: ({ props }) => (
-    <span style={{ color: props.color, fontSize: props.size }}>{props.text || '渲染文本'}</span>
-  ),
+  render: ({ props, size }) => {
+    return (
+      <span
+        style={{
+          color: props.color,
+          fontSize: props.size,
+          width: `${size.width}px`,
+          height: `${size.height}px`
+        }}
+      >
+        {props.text || '渲染文本'}
+      </span>
+    )
+  },
   key: 'text',
+  resize: {
+    width: true,
+    height: true
+  },
   props: {
     text: createInputProp('文本内容'),
     color: createColorProp('字体颜色'),
@@ -48,9 +63,17 @@ registerConfig.register({
 
 registerConfig.register({
   label: '按钮',
+  resize: {
+    width: true,
+    height: true
+  },
   preview: () => <ElButton>预览按钮</ElButton>,
-  render: ({ props }) => (
-    <ElButton type={props.type} size={props.size}>
+  render: ({ props, size }) => (
+    <ElButton
+      type={props.type}
+      size={props.size}
+      style={{ width: `${size.width}px`, height: `${size.height}px` }}
+    >
       {props.text || '渲染按钮'}
     </ElButton>
   ),
@@ -74,9 +97,18 @@ registerConfig.register({
 
 registerConfig.register({
   label: '输入框',
+  resize: {
+    width: true,
+    height: true
+  },
   preview: () => <ElInput placeholder="预览输入框"></ElInput>,
-  render: ({ model, props }) => (
-    <ElInput placeholder="渲染输入框" {...model.default} size={props.size}></ElInput>
+  render: ({ model, props, size }) => (
+    <ElInput
+      placeholder="渲染输入框"
+      {...model.default}
+      size={props.size}
+      style={{ width: `${size.width}px`, height: `${size.height}px` }}
+    ></ElInput>
   ),
   key: 'input',
   props: {
@@ -93,8 +125,12 @@ registerConfig.register({
 
 registerConfig.register({
   label: '范围选择器',
+  resize: {
+    width: true,
+    height: true
+  },
   preview: () => <Range placeholder="预览范围选择器"></Range>,
-  render: ({ model }) => {
+  render: ({ model, size }) => {
     return (
       <Range
         {...{
@@ -103,6 +139,7 @@ registerConfig.register({
           'onUpdate:start': model.start['onUpdate:modelValue'],
           'onUpdate:end': model.end['onUpdate:modelValue']
         }}
+        style={{ width: `${size.width}px`, height: `${size.height}px` }}
       ></Range>
     )
   },
@@ -116,10 +153,14 @@ registerConfig.register({
 
 registerConfig.register({
   label: '下拉框',
+  resize: {
+    width: true,
+    height: true
+  },
   preview: () => <ElSelect placeholder="预览下拉框"></ElSelect>,
-  render: ({ model, props }) => {
+  render: ({ model, props, size }) => {
     return (
-      <ElSelect {...model.default}>
+      <ElSelect {...model.default} style={{ width: `${size.width}px`, height: `${size.height}px` }}>
         {(props.options || []).map((opt, index) => (
           <ElOption label={opt.label} value={opt.value} key={index} />
         ))}
