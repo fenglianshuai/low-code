@@ -11,7 +11,8 @@ import { $dropDown, DropdownItem } from '../components/DropDown'
 import EditorOperator from '../components/editor-operator'
 export default defineComponent({
   props: {
-    modelValue: { type: Object }
+    modelValue: { type: Object },
+    formData: { type: Object }
   },
 
   emits: ['update:modelValue'],
@@ -213,7 +214,12 @@ export default defineComponent({
         </div>
         {/* 右侧属性区 */}
         <div class="editor-right">
-          <EditorOperator block={lastSelectBlock.value} data={data.value}></EditorOperator>
+          <EditorOperator
+            block={lastSelectBlock.value}
+            data={data.value}
+            updateContainer={commands.updateContainer}
+            updateBlock={commands.updateBlock}
+          ></EditorOperator>
         </div>
         {/* 中间内容区 */}
         <div class="editor-container">
@@ -234,6 +240,7 @@ export default defineComponent({
                     'editor-block-focus': block.focus,
                     'editor-block-preview': previewRef.value
                   }}
+                  formData={props.formData}
                   onMousedown={(e) => blockMousedown(e, block, index)}
                   onContextmenu={(e) => onContextmenuBlock(e, block)}
                 ></EditorBlocks>
